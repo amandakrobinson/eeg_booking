@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EEG Study Booking — UQ Brain Research</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #1a1a18;
+      --ink-mid: #5a5a55;
+      --ink-light: #999990;
+      --paper: #f5f3ee;
+      --paper-dark: #ede9e0;
+      --uq-purple: #51247a;
+      --uq-purple-hover: #3c1a5e;
+      --uq-purple-light: #f3eef8;
+      --uq-purple-border: #c9aee0;
+      --white: #fff;
+      --radius: 4px;
+      --success: #2e7d3f;
+    }
+
+    html { font-size: 16px; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header / UQ Banner ── */
+    .uq-bar {
+      background: var(--white);
+      border-bottom: 2px solid var(--uq-purple);
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    header {
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--paper-dark);
+    }
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--uq-purple);
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+    h1 em { font-style: italic; color: var(--uq-purple); }
+    .tagline {
+      font-size: 0.95rem;
+      color: var(--ink-mid);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Info cards ── */
+    .info-strip {
+      max-width: 620px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    .info-chip {
+      background: var(--uq-purple-light);
+      border: 1px solid var(--uq-purple-border);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      text-align: center;
+    }
+    .info-chip .chip-val {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--uq-purple);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .info-chip .chip-label {
+      font-size: 0.73rem;
+      color: var(--ink-mid);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Who we need banner ── */
+    .who-banner {
+      max-width: 620px;
+      margin: 1.25rem auto 0;
+      padding: 0 1.5rem;
+    }
+    .who-inner {
+      background: var(--white);
+      border: 1px solid var(--paper-dark);
+      border-left: 3px solid var(--uq-purple);
+      border-radius: var(--radius);
+      padding: 0.9rem 1.1rem;
+      font-size: 0.875rem;
+      color: var(--ink-mid);
+      line-height: 1.6;
+    }
+    .who-inner strong { color: var(--ink); font-weight: 500; }
+
+    /* ── Main layout ── */
+    main {
+      flex: 1;
+      max-width: 560px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .section-heading {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--uq-purple);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Form card ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--paper-dark);
+      border-radius: 2px;
+      padding: 2rem 2rem 2.25rem;
+    }
+
+    .form-group { margin-bottom: 1.4rem; }
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-mid);
+      margin-bottom: 0.45rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1px solid #ddd9d0;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: var(--white);
+      transition: border-color 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--uq-purple);
+    }
+    .select-wrapper { position: relative; }
+    .select-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--ink-mid);
+      pointer-events: none;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--paper-dark);
+      margin: 1.75rem 0;
+    }
+
+    /* ── Time slots ── */
+    .slots-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-mid);
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .slot {
+      border: 1px solid #ddd9d0;
+      border-radius: var(--radius);
+      padding: 0.55rem 0.4rem;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.12s;
+      background: var(--white);
+      color: var(--ink-mid);
+      user-select: none;
+    }
+    .slot:hover { border-color: var(--uq-purple); color: var(--uq-purple); }
+    .slot.selected {
+      background: var(--uq-purple);
+      border-color: var(--uq-purple);
+      color: var(--white);
+    }
+    .slot-hint {
+      font-size: 0.75rem;
+      color: var(--ink-light);
+      margin-top: 0.35rem;
+    }
+
+    /* ── Submit ── */
+    .btn-submit {
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      background: var(--uq-purple);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: 1.75rem;
+    }
+    .btn-submit:hover { background: var(--uq-purple-hover); }
+    .btn-submit:active { transform: scale(0.99); }
+    .btn-submit:disabled { background: var(--ink-light); cursor: not-allowed; }
+
+    /* ── States ── */
+    .status-msg {
+      display: none;
+      margin-top: 1.25rem;
+      padding: 0.9rem 1.1rem;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .status-msg.success {
+      display: block;
+      background: #edf7ef;
+      border: 1px solid #b6dfc0;
+      color: var(--success);
+    }
+    .status-msg.error {
+      display: block;
+      background: #fdf0f8;
+      border: 1px solid #e0b4d4;
+      color: var(--uq-purple);
+    }
+    .spinner {
+      display: none;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--uq-purple);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.65);
+    }
+    footer a { color: rgba(255,255,255,0.85); text-decoration: none; }
+    footer a:hover { color: #fff; }
+
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+      .slots-grid { grid-template-columns: repeat(2, 1fr); }
+      header { padding: 2rem 1.25rem 1.5rem; }
+      .card { padding: 1.5rem 1.25rem; }
+      .info-strip { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Logo bar -->
+<div class="uq-bar">
+  <img src="dynamic_cognition_lab_logo.png" alt="Dynamic Cognition Lab" style="height:48px; width:auto;" />
+  <img src="UQ-300x300.png" alt="The University of Queensland" style="height:48px; width:auto;" />
+</div>
+
+<header>
+  <p class="eyebrow">Queensland Brain Institute · EEG Research</p>
+  <h1>Concussion &amp; <em>Brain Function</em><br>Study</h1>
+  <p class="tagline">We're investigating how concussion affects the way the brain processes visual information — using safe, non-invasive EEG technology.</p>
+</header>
+
+<!-- Info chips -->
+<div class="info-strip">
+  <div class="info-chip">
+    <span class="chip-val">2 hrs</span>
+    <span class="chip-label">Session length</span>
+  </div>
+  <div class="info-chip">
+    <span class="chip-val">$40</span>
+    <span class="chip-label">Paid for your time</span>
+  </div>
+  <div class="info-chip">
+    <span class="chip-val">UQ</span>
+    <span class="chip-label">St Lucia campus</span>
+  </div>
+</div>
+
+<!-- Who we need -->
+<div class="who-banner">
+  <div class="who-inner">
+    <strong>Who can participate?</strong> We're looking for people who have had a
+    <strong>recent concussion</strong> — or people who haven't. Both groups are
+    needed for this research! The session involves wearing an EEG cap and watching
+    images on a screen while pressing a button — no prior experience needed.
+    <br><br>
+    <strong>Sessions run on Tuesdays and Thursdays.</strong> Select your preferred day when registering below.
+  </div>
+</div>
+
+<main>
+  <p class="section-heading">Register your interest</p>
+  <div class="card">
+    <form id="booking-form" novalidate>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first-name">First name</label>
+          <input type="text" id="first-name" name="first_name" placeholder="Alex" required />
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last name</label>
+          <input type="text" id="last-name" name="last_name" placeholder="Smith" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="alex@example.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone number</label>
+        <input type="tel" id="phone" name="phone" placeholder="+61 400 000 000" required />
+      </div>
+
+      <hr class="divider" />
+
+      <div class="form-group">
+        <label for="participant-group">Which group applies to you?</label>
+        <div class="select-wrapper">
+          <select id="participant-group" name="participant_group" required>
+            <option value="" disabled selected>Select one…</option>
+            <option value="Recent concussion">I've had a concussion in the last few months</option>
+            <option value="No recent concussion">No recent concussion</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="session-date">Preferred date</label>
+        <input type="date" id="session-date" name="session_date" required />
+        <p id="date-hint" style="font-size:0.75rem; color:var(--ink-light); margin-top:0.35rem;">Sessions available on Tuesdays &amp; Thursdays only.</p>
+      </div>
+
+      <div class="form-group">
+        <span class="slots-label">Preferred time</span>
+        <div class="slots-grid" id="slots-grid">
+          <div class="slot" data-time="9:00 AM">9:00 AM</div>
+          <div class="slot" data-time="11:00 AM">11:00 AM</div>
+          <div class="slot" data-time="1:00 PM">1:00 PM</div>
+          <div class="slot" data-time="3:00 PM">3:00 PM</div>
+        </div>
+        <p class="slot-hint">Select a time slot above</p>
+        <input type="hidden" id="selected-time" name="selected_time" />
+      </div>
+
+      <button type="submit" class="btn-submit" id="submit-btn">
+        <span id="btn-text">Register booking</span>
+        <div class="spinner" id="spinner"></div>
+      </button>
+
+      <div class="status-msg" id="status-msg"></div>
+    </form>
+  </div>
+</main>
+
+<footer>
+  Questions? Contact <a href="mailto:a.robinson4@uq.edu.au">Dr Amanda Robinson — a.robinson4@uq.edu.au</a><br>
+  <span style="opacity:0.5; font-size:0.72rem; margin-top:0.4rem; display:block;">The University of Queensland · School of Psychology · St Lucia QLD 4072</span>
+</footer>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  // ─────────────────────────────────────────────
+  // CONFIGURATION — fill these in after setup
+  // ─────────────────────────────────────────────
+  const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+  const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+  const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+  // ─────────────────────────────────────────────
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  const dateInput = document.getElementById('session-date');
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute('min', today);
+
+  // Warn if a non-Tuesday/Thursday date is picked
+  dateInput.addEventListener('change', () => {
+    const d = new Date(dateInput.value + 'T00:00:00');
+    const day = d.getDay(); // 0=Sun,2=Tue,4=Thu
+    const hint = document.getElementById('date-hint');
+    if (day !== 2 && day !== 4) {
+      hint.textContent = 'Please pick a Tuesday or Thursday.';
+      hint.style.color = '#a83314';
+    } else {
+      hint.textContent = 'Sessions available on Tuesdays & Thursdays only.';
+      hint.style.color = '';
+    }
+  });
+
+  const slots = document.querySelectorAll('.slot');
+  const hiddenTime = document.getElementById('selected-time');
+  slots.forEach(slot => {
+    slot.addEventListener('click', () => {
+      slots.forEach(s => s.classList.remove('selected'));
+      slot.classList.add('selected');
+      hiddenTime.value = slot.dataset.time;
+    });
+  });
+
+  document.getElementById('booking-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const btn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const spinner = document.getElementById('spinner');
+    const statusMsg = document.getElementById('status-msg');
+
+    const chosenDate = new Date(form.session_date.value + 'T00:00:00');
+    const chosenDay = chosenDate.getDay();
+    if (chosenDay !== 2 && chosenDay !== 4) {
+      statusMsg.className = 'status-msg error';
+      statusMsg.textContent = 'Please select a Tuesday or Thursday for your session.';
+      return;
+    }
+
+    if (!hiddenTime.value) {
+      statusMsg.className = 'status-msg error';
+      statusMsg.textContent = 'Please select a time slot.';
+      return;
+    }
+
+    btn.disabled = true;
+    btnText.style.display = 'none';
+    spinner.style.display = 'block';
+    statusMsg.className = 'status-msg';
+
+    const params = {
+      first_name:        form.first_name.value.trim(),
+      last_name:         form.last_name.value.trim(),
+      email:             form.email.value.trim(),
+      phone:             form.phone.value.trim(),
+      participant_group: form.participant_group.value,
+      session_date:      form.session_date.value,
+      selected_time:     hiddenTime.value,
+    };
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params);
+      statusMsg.className = 'status-msg success';
+      statusMsg.textContent = '✓ Thank you! The research team will be in touch within 24 hours to confirm your session.';
+      form.reset();
+      slots.forEach(s => s.classList.remove('selected'));
+      hiddenTime.value = '';
+    } catch (err) {
+      statusMsg.className = 'status-msg error';
+      statusMsg.textContent = 'Something went wrong. Please try again or email a.robinson4@uq.edu.au directly.';
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btnText.style.display = 'block';
+      spinner.style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>
